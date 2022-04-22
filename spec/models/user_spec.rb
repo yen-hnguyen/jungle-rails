@@ -29,7 +29,7 @@ RSpec.describe User, type: :model do
       @user = User.new({
         first_name: "Yen",
         last_name: nil,
-        email: "test@hotmail.com",
+        email: "test@hotmail..com",
         password: "12345",
         password_confirmation: "12345"
       })
@@ -95,6 +95,18 @@ RSpec.describe User, type: :model do
         expect(@user2).to_not be_valid
         expect(@user2.errors.full_messages).to include "Email has already been taken"
       end
+    end
+
+    it 'should have the password length minimum of 5' do
+      @user = User.new({
+        first_name: "Yen",
+        last_name: "Nguyen",
+        email: "test@hotmail.com",
+        password: "123",
+        password_confirmation: "123"
+      })
+      expect(@user).to be_invalid
+      expect(@user.errors.full_messages).to include "Password is too short (minimum is 5 characters)"
     end
   end
 end
