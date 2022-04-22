@@ -107,6 +107,43 @@ RSpec.describe User, type: :model do
       })
       expect(@user).to be_invalid
       expect(@user.errors.full_messages).to include "Password is too short (minimum is 5 characters)"
-    end
+    end 
   end
+
+  describe '.authenticate_with_credentials' do   
+    before(:all) do
+      @user = User.create({
+        first_name: "Yen",
+        last_name: "Nguyen",
+        email: "test123@gmail.com",
+        password: "123456789",
+        password_confirmation: "123456789"
+      })
+    end 
+
+    it 'should authenticate with the right credentails' do
+      email = "test123@gmail.com"
+      password = 123456789
+      @user2 = User.authenticate_with_credentials(email, password)
+
+      expect(@user2).not_to be_nil
+    end
+
+    it 'should authenticate if there is spaces before and/or after the email ' do
+      email = " test123@gmail.com     "
+      password = 123456789
+      @user2 = User.authenticate_with_credentials(email, password)
+
+      expect(@user2).not_to be_nil
+    end
+
+    it 'should authenticate if user types in the wrong case for their email' do
+      email = "TEST123@gmail.CoM"
+      password = 123456789
+      @user2 = User.authenticate_with_credentials(email, password)
+
+      expect(@user2).not_to be_nil
+    end
+    
+  end  
 end
